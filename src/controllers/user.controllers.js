@@ -24,6 +24,12 @@ const getOne = catchError(async(req, res) => {
   return res.status(200).json(user);
 });
 
+const remove = catchError(async(req, res) => {
+  const { id } = req.params;
+  await User.destroy({ where: { id:id } });
+  return res.sendStatus(204);
+});
+
 const update = catchError(async(req, res) => {
   const { id } = req.params;
   const { first_name, last_name, birthday, email, password } = req.body;
@@ -31,12 +37,13 @@ const update = catchError(async(req, res) => {
     { first_name, last_name, birthday, email, password },
     { where: { id: id }, returning: true }
   );
-  return res.json(user);
+  return res.json(user[1][0]);
 });
 
 module.exports = {
     getAll,
     create,
     getOne,
+    remove,
     update
 }
